@@ -471,7 +471,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "(temperature{job=~'$JobName',instance=~'$Device'}",
+          "expr": "temperature{job=~'$JobName',instance=~'$Device'}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -4290,7 +4290,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "(diskTemperature{job=~'$JobName',instance=~'$Device'}",
+          "expr": "diskTemperature{job=~'$JobName',instance=~'$Device'}",
           "format": "table",
           "instant": true,
           "interval": "",

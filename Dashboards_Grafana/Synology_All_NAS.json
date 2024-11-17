@@ -1566,7 +1566,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "(temperature{job=~'$JobName',instance=~'$Device'}*9/5)+32",
+          "expr": "temperature{job=~'$JobName',instance=~'$Device'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -2477,7 +2477,7 @@
               },
               {
                 "id": "max",
-                "value": 140
+                "value": 100
               },
               {
                 "id": "custom.width",
@@ -2711,7 +2711,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "(diskTemperature{job=~'$JobName',instance=~'$Device',diskID=~'$DiskName'}*9/5)+32 or (diskTemperature{job=~'$JobName',instance=~'$Device',diskID=~'$DiskNameSSD'}*9/5)+32",
+          "expr": "diskTemperature{job=~'$JobName',instance=~'$Device',diskID=~'$DiskName'} or diskTemperature{job=~'$JobName',instance=~'$Device',diskID=~'$DiskNameSSD'}",
           "format": "table",
           "hide": false,
           "instant": true,
