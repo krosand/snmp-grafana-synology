@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 15s   # Intervalle de récupération par défaut
+  evaluation_interval: 15s
+scrape_configs:
+  - job_name: 'snmp'
+    metrics_path: /snmp
+    params:
+      target: [192.168.10.201]  # L'IP de votre Synology
+      module: [synology]       # Le module SNMP configuré
+      auth: [public_v2]        # Le profil d'authentification
+    static_configs:
+      - targets: ['snmp-exporter:9116']  # L'adresse de votre SNMP Exporter
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 192.168.10.201  # Étiquette pour identifier votre Synology
+
