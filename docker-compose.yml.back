@@ -8,10 +8,10 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./data/grafana:/var/lib/grafana:rw
+      - /mnt/monitoring/grafana_data:/var/lib/grafana:rw
     environment:
-      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
-      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
     mem_limit: 512m
@@ -25,8 +25,8 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./data/prometheus:/prometheus:rw
-      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - /mnt/monitoring/prometheus_data:/prometheus:rw
+      - /mnt/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:9090/ || exit 1
     mem_limit: 1g
@@ -39,23 +39,25 @@ services:
     ports:
       - "9116:9116"
     volumes:
-      - ./config/snmp/snmp.yml:/etc/snmp_exporter/snmp.yml:ro
+      - /mnt/monitoring/snmp.yml:/etc/snmp_exporter/snmp.yml:ro
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:9116/ || exit 1
     mem_limit: 256m
     cpu_shares: 512
     restart: unless-stopped
-    
+
   blackbox-exporter:
     image: prom/blackbox-exporter:latest
     container_name: blackbox-exporter
     ports:
       - "9115:9115"
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:9115/ || exit 1
-    mem_limit: 256m
-    cpu_shares: 512
+    volumes:
+      - /mnt/monitoring/blackbox.yml:/config/blackbox.yml:ro
+    command:
+      - '--config.file=/config/blackbox.yml'
     restart: unless-stopped
+
+  
 
 networks:
   default:

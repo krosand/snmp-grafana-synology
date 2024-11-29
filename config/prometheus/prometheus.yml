@@ -1,6 +1,7 @@
 global:
   scrape_interval: 15s   # Intervalle de récupération par défaut
   evaluation_interval: 15s
+
 scrape_configs:
   - job_name: 'snmp'
     metrics_path: /snmp
@@ -14,4 +15,54 @@ scrape_configs:
       - source_labels: [__address__]
         target_label: instance
         replacement: 192.168.10.201  # Étiquette pour identifier votre Synology
+
+  - job_name: 'website-monitoring-http'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]  # Module HTTP utilisé par Blackbox Exporter
+    static_configs:
+      - targets:
+          - http://192.168.10.201/dokuwiki/doku.php  # URL à surveiller
+          - https://relais.onacvg.fr
+          - https://www.memorial-montluc.fr
+          - https://www.onac-vg.fr/             
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115  # Adresse et port du Blackbox Exporter
+
+  - job_name: 'website-monitoring-icmp'
+    metrics_path: /probe
+    params:
+      module: [icmp]  # Module ICMP pour vérifier la connectivité
+    static_configs:
+      - targets:
+          - 192.168.10.201  # Adresse IP à surveiller (ajoutez d'autres IP ici)
+          - 8.8.8.8         # Exemple : Google DNS
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115  # Adresse et port du Blackbox Exporter
+
+  - job_name: 'relais-https'
+    metrics_path: /probe
+    params:
+      module: [https_tls]  # Utilise le module HTTPS défini précédemment
+    static_configs:
+      - targets:
+          - relais.onacvg.fr  # Adresse du serveur à surveiller
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115  # Adresse et port de Blackbox Exporter
+
 

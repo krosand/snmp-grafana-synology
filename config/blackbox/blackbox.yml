@@ -1,0 +1,25 @@
+modules:
+  http_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2"]
+      valid_status_codes: []  # Accepte tous les codes 2xx par défaut
+      fail_if_ssl: false
+      fail_if_not_ssl: false
+
+  icmp:
+    prober: icmp
+    timeout: 5s
+
+  https_tls:
+    prober: http
+    timeout: 10s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2"]
+      valid_status_codes: [200]  # Vérifie que le serveur retourne un code HTTP 200
+      fail_if_ssl: false         # Ne pas échouer si SSL/TLS est utilisé
+      fail_if_not_ssl: true      # Échoue si le serveur ne propose pas SSL/TLS
+      tls_config:
+        insecure_skip_verify: false  # Vérifie le certificat SSL
+
