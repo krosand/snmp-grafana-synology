@@ -23,9 +23,6 @@ scrape_configs:
     static_configs:
       - targets:
           - http://192.168.10.201/dokuwiki/doku.php  # URL à surveiller
-          - https://relais.onacvg.fr
-          - https://www.memorial-montluc.fr
-          - https://www.onac-vg.fr/             
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -56,7 +53,7 @@ scrape_configs:
       module: [https_tls]  # Utilise le module HTTPS défini précédemment
     static_configs:
       - targets:
-          - relais.onacvg.fr  # Adresse du serveur à surveiller
+          - relais.oneff.fr  # Adresse du serveur à surveiller
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
